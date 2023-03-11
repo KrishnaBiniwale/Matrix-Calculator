@@ -5,10 +5,7 @@
 
 using namespace std;
 
-// matrix.size == horizontal size
-// matrix[0].size == vertical size
-
-void printMatrix(vector<vector<int>> &matrix)
+void printMatrix(vector<vector<double>> &matrix)
 {
     if (matrix.size() == 0)
     {
@@ -25,9 +22,9 @@ void printMatrix(vector<vector<int>> &matrix)
     }
 }
 
-vector<vector<int>> initializeMatrix()
+vector<vector<double>> initializeMatrix()
 {
-    vector<vector<int>> matrix;
+    vector<vector<double>> matrix;
     size_t dimension = 0;
     bool quit = false;
 
@@ -49,7 +46,7 @@ vector<vector<int>> initializeMatrix()
 
         getline(cin, str);
         stringstream ss(str);
-        vector<int> vec;
+        vector<double> vec;
         string num;
         bool cont = false;
         while (ss >> num)
@@ -64,10 +61,10 @@ vector<vector<int>> initializeMatrix()
             }
             else
             {
-                int x = 0;
+                double x = 0;
                 try
                 {
-                    x = stoi(num);
+                    x = stod(num);
                 }
                 catch (...)
                 {
@@ -104,7 +101,7 @@ vector<vector<int>> initializeMatrix()
     return matrix;
 }
 
-int determinant(vector<vector<int>> &matrix)
+double determinant(vector<vector<double>> &matrix)
 {
     if (matrix.size() == 1)
     {
@@ -116,17 +113,17 @@ int determinant(vector<vector<int>> &matrix)
     }
     else
     {
-        int totalDeterminant = 0;
+        double totalDeterminant = 0;
         for (size_t i = 0; i < matrix.size(); i++)
         {
-            vector<vector<int>> smaller;
+            vector<vector<double>> smaller;
             for (size_t j = 0; j < matrix.size(); j++)
             {
                 if (j == i)
                 {
                     continue;
                 }
-                vector<int> vec;
+                vector<double> vec;
                 for (size_t k = 1; k < matrix[0].size(); k++)
                 {
                     vec.push_back(matrix[j][k]);
@@ -134,7 +131,7 @@ int determinant(vector<vector<int>> &matrix)
                 smaller.push_back(vec);
             }
 
-            int cofactor = matrix[i][0] * determinant(smaller);
+            double cofactor = matrix[i][0] * determinant(smaller);
 
             if (i % 2 == 0)
             {
@@ -150,12 +147,27 @@ int determinant(vector<vector<int>> &matrix)
     return 0;
 }
 
-vector<vector<int>> multiply(vector<vector<int>> &m1, vector<vector<int>> &m2)
+vector<vector<double>> multiply(vector<vector<double>> &m1, double scalar)
 {
-    vector<vector<int>> matrix;
+    vector<vector<double>> result;
+    for (size_t i = 0; i < m1.size(); i++)
+    {
+        vector<double> vec;
+        for (size_t j = 0; j < m1[0].size(); j++)
+        {
+            vec.push_back(m1[i][j] * scalar);
+        }
+        result.push_back(vec);
+    }
+    return result;
+}
+
+vector<vector<double>> multiply(vector<vector<double>> &m1, vector<vector<double>> &m2)
+{
+    vector<vector<double>> matrix;
     for (size_t width = 0; width < m2.size(); width++)
     {
-        vector<int> vec;
+        vector<double> vec;
         matrix.push_back(vec);
     }
 
@@ -163,7 +175,7 @@ vector<vector<int>> multiply(vector<vector<int>> &m1, vector<vector<int>> &m2)
     {
         for (size_t i = 0; i < m2.size(); i++)
         {
-            int sum = 0;
+            double sum = 0;
             for (size_t j = 0; j < m1.size(); j++)
             {
                 sum += m1[j][h] * m2[i][j];
@@ -180,39 +192,43 @@ void display()
     cout << "Key"
          << " | "
          << "Operations" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << "1: "
          << " | "
          << "Create Matrix" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << "2: "
          << " | "
          << "Delete Matrix" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << "3: "
          << " | "
          << "Change Current Matrix" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << "4: "
          << " | "
          << "Print Current Matrix" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << "5: "
          << " | "
          << "Print All Matrices" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << "6: "
          << " | "
          << "Find Determinant" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << "7: "
          << " | "
-         << "Multiply Matrices" << endl;
-    cout << "--------------------------" << endl;
+         << "Multiply Matrix by Scalar" << endl;
+    cout << "-------------------------------" << endl;
+    cout << "8: "
+         << " | "
+         << "Multiply Two Matrices" << endl;
+    cout << "-------------------------------" << endl;
     cout << "0: "
          << " | "
          << "Quit" << endl;
-    cout << "--------------------------" << endl;
+    cout << "-------------------------------" << endl;
     cout << endl;
 }
 
@@ -221,18 +237,18 @@ int main()
     cout << "\nThis is a matrix calculator.\n"
          << endl;
     bool quit = false;
-    vector<vector<vector<int>>> matrices;
-    vector<vector<int>> currentMatrix;
+    vector<vector<vector<double>>> matrices;
+    vector<vector<double>> currentMatrix;
     size_t currentIndex;
     while (true)
     {
         display();
         cout << "Operation #: ";
-        int num;
-        cin >> num;
+        int key;
+        cin >> key;
         cout << endl;
 
-        switch (num)
+        switch (key)
         {
         case 0:
         {
@@ -241,7 +257,7 @@ int main()
         break;
         case 1:
         {
-            vector<vector<int>> matrix = initializeMatrix();
+            vector<vector<double>> matrix = initializeMatrix();
             if (matrix.size() != 0)
             {
                 matrices.push_back(matrix);
@@ -323,14 +339,68 @@ int main()
             }
             else
             {
-                int num = determinant(currentMatrix);
-                cout << "The determinant of the matrix is: " << num << endl;
+                double num = determinant(currentMatrix);
+                cout << "The determinant of the current matrix is: " << num << endl;
             }
         }
         break;
         case 7:
         {
-            if (matrices.size() < 2)
+            if (matrices.size() < 1)
+            {
+                cout << "There are not enough matrices. Initialize a matrix before you multiply it." << endl;
+                break;
+            }
+            size_t num1 = 0;
+            while (true)
+            {
+                cout << "Select first matrix: ";
+                cin >> num1;
+                cout << endl;
+                if (cin.fail() || (num1 - 1 < 0 || num1 - 1 >= matrices.size()))
+                {
+                    cout << "Invalid Number.\n"
+                         << endl;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            vector<vector<double>> m1 = matrices[num1 - 1];
+            double scalar = 0;
+            while (true)
+            {
+                cout << "Select scalar to multiply by: ";
+                cin >> scalar;
+                cout << endl;
+                if (cin.fail())
+                {
+                    cout << "Invalid Number.\n"
+                         << endl;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            vector<vector<double>> matrix = multiply(m1, scalar);
+            cout << "The original matrix was: \n"
+                 << endl;
+            printMatrix(currentMatrix);
+            cout << endl;
+            cout << "The resulting matrix is: \n"
+                 << endl;
+            printMatrix(matrix);
+            matrices.push_back(matrix);
+            currentMatrix = matrices[matrices.size() - 1];
+            currentIndex = matrices.size() - 1;
+        }
+        break;
+        case 8:
+        {
+            if (matrices.size() < 1)
             {
                 cout << "There are not enough matrices. Initialize some matrices before you multiply them." << endl;
                 break;
@@ -351,7 +421,7 @@ int main()
                     break;
                 }
             }
-            vector<vector<int>> m1 = matrices[num1 - 1];
+            vector<vector<double>> m1 = matrices[num1 - 1];
             size_t num2 = 0;
             while (true)
             {
@@ -368,7 +438,7 @@ int main()
                     break;
                 }
             }
-            vector<vector<int>> m2 = matrices[num2 - 1];
+            vector<vector<double>> m2 = matrices[num2 - 1];
 
             if (m1.size() != m2[0].size())
             {
@@ -376,7 +446,7 @@ int main()
             }
             else
             {
-                vector<vector<int>> matrix = multiply(m1, m2);
+                vector<vector<double>> matrix = multiply(m1, m2);
                 cout << "The resulting matrix is: \n"
                      << endl;
                 printMatrix(matrix);

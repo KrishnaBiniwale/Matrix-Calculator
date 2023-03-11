@@ -12,7 +12,8 @@ Key | Operations
 4:  | Print Current Matrix
 5:  | Print All Matrices
 6:  | Find Determinant
-7:  | Multiply Matrices
+7:  | Multiply Matrix by Scalar
+8:  | Multiply Two Matrices
 0:  | Quit
 
 Currently, these operations are limited to 2D vectors. However, I am planning to implement 3D vectors eventually.
