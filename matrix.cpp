@@ -147,6 +147,21 @@ double determinant(vector<vector<double>> &matrix)
     return 0;
 }
 
+vector<vector<double>> add(vector<vector<double>> &m1, vector<vector<double>> &m2)
+{
+    vector<vector<double>> result;
+    for (size_t i = 0; i < m1.size(); i++)
+    {
+        vector<double> vec;
+        for (size_t j = 0; j < m1[0].size(); j++)
+        {
+            vec.push_back(m1[i][j] + m2[i][j]);
+        }
+        result.push_back(vec);
+    }
+    return result;
+}
+
 vector<vector<double>> multiply(vector<vector<double>> &m1, double scalar)
 {
     vector<vector<double>> result;
@@ -219,9 +234,13 @@ void display()
     cout << "-------------------------------" << endl;
     cout << "7: "
          << " | "
-         << "Multiply Matrix by Scalar" << endl;
+         << "Add Two Matrices" << endl;
     cout << "-------------------------------" << endl;
     cout << "8: "
+         << " | "
+         << "Multiply Matrix by Scalar" << endl;
+    cout << "-------------------------------" << endl;
+    cout << "9: "
          << " | "
          << "Multiply Two Matrices" << endl;
     cout << "-------------------------------" << endl;
@@ -348,6 +367,64 @@ int main()
         {
             if (matrices.size() < 1)
             {
+                cout << "There are not enough matrices. Initialize some matrices before you add them." << endl;
+                break;
+            }
+            size_t num1 = 0;
+            while (true)
+            {
+                cout << "Select first matrix: ";
+                cin >> num1;
+                cout << endl;
+                if (cin.fail() || (num1 - 1 < 0 || num1 - 1 >= matrices.size()))
+                {
+                    cout << "Invalid Number.\n"
+                         << endl;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            vector<vector<double>> m1 = matrices[num1 - 1];
+            size_t num2 = 0;
+            while (true)
+            {
+                cout << "Select second matrix: ";
+                cin >> num2;
+                cout << endl;
+                if (cin.fail() || (num2 - 1 < 0 || num2 - 1 >= matrices.size()))
+                {
+                    cout << "Invalid Number.\n"
+                         << endl;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            vector<vector<double>> m2 = matrices[num2 - 1];
+
+            if (m1.size() != m2.size() || m1[0].size() != m2[0].size())
+            {
+                cout << "This operation is not possible with these matrices." << endl;
+            }
+            else
+            {
+                vector<vector<double>> matrix = add(m1, m2);
+                cout << "The resulting matrix is: \n"
+                     << endl;
+                printMatrix(matrix);
+                matrices.push_back(matrix);
+                currentMatrix = matrices[matrices.size() - 1];
+                currentIndex = matrices.size() - 1;
+            }
+        }
+        break;
+        case 8:
+        {
+            if (matrices.size() < 1)
+            {
                 cout << "There are not enough matrices. Initialize a matrix before you multiply it." << endl;
                 break;
             }
@@ -398,7 +475,7 @@ int main()
             currentIndex = matrices.size() - 1;
         }
         break;
-        case 8:
+        case 9:
         {
             if (matrices.size() < 1)
             {
